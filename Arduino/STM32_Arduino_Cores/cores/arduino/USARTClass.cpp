@@ -86,13 +86,39 @@ void USARTClass::begin( const uint32_t dwBaudRate )
 #ifdef STM32F10X_HD
     RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOC | RCC_APB2Periph_AFIO, ENABLE);
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_UART4, ENABLE);
+#elif defined (STM32F40_41xxx)
+    RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_GPIOA, ENABLE);
 #endif
-#ifdef STM32F10X_MD
-    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOA | RCC_APB2Periph_AFIO, ENABLE);
+    // Enable USART Clock
+#if defined (STM32F10X_HD) || (STM32F10X_MD)
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_USART1, ENABLE);
+#elif defined (STM32F40_41xxx)
     RCC_APB1PeriphClockCmd(RCC_APB1Periph_USART2, ENABLE);
 #endif
+#if defined (STM32F10X_HD) || (STM32F10X_MD)
+    // Configure USART Rx as input floating
     pinMode(RX0, INPUT);
+
+    // Configure USART Tx as alternate function push-pull
     pinMode(TX0, AF_OUTPUT_PUSHPULL);
+#elif defined (STM32F40_41xxx)
+    // Configure USART Tx as alternate function push-pull
+    //pinMode(TX, AF_OUTPUT_PUSHPULL);
+    //pinMode(RX, AF_OUTPUT_PUSHPULL);
+
+    GPIO_InitTypeDef GPIO_InitStructure;
+    /* Configure USART Tx and Rx as alternate function push-pull */
+    GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
+    GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
+    GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_UP;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_2 | GPIO_Pin_3;
+
+    GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource2, GPIO_AF_USART2);
+    GPIO_PinAFConfig(GPIOA, GPIO_PinSource3, GPIO_AF_USART2);
+#endif
   }
   else if(_dwId == id_serial2)//Serial2
   {

@@ -144,8 +144,8 @@ extern const PinDescription g_APinDescription[]=
 {GPIOA, GPIO_Pin_4, RCC_AHB1Periph_GPIOA, ADC_Channel_4, NULL, NONE, GPIO_PinSource4, GPIO_AF_SPI1},
 
 //36/37/38/39  USART2_RX,USART2_TX,UART4_RX,UART4_TX
-{GPIOA, GPIO_Pin_3, RCC_AHB1Periph_GPIOA, ADC_Channel_3, TIM5,TIM_Channel_4, GPIO_PinSource3, GPIO_AF_TIM5},//pwm
-{GPIOA, GPIO_Pin_2, RCC_AHB1Periph_GPIOA, ADC_Channel_2, TIM5,TIM_Channel_3, GPIO_PinSource2, GPIO_AF_TIM5},//pwm
+{GPIOA, GPIO_Pin_3, RCC_AHB1Periph_GPIOA, NONE, TIM5,TIM_Channel_4, GPIO_PinSource3, GPIO_AF_TIM5},//pwm
+{GPIOA, GPIO_Pin_2, RCC_AHB1Periph_GPIOA, NONE, TIM5,TIM_Channel_3, GPIO_PinSource2, GPIO_AF_TIM5},//pwm
 {GPIOA, GPIO_Pin_1, RCC_AHB1Periph_GPIOA, ADC_Channel_1, TIM5,TIM_Channel_2, GPIO_PinSource1, GPIO_AF_TIM5},//Encoder
 {GPIOA, GPIO_Pin_0, RCC_AHB1Periph_GPIOA, ADC_Channel_0, TIM5,TIM_Channel_1, GPIO_PinSource0, GPIO_AF_TIM5},//Encoder
 
@@ -186,9 +186,9 @@ RingBuffer rx_buffer4;
 USARTClass Serial(USART3, USART3_IRQn, id_serial, &rx_buffer1);
 void serialEvent() __attribute__((weak));
 void serialEvent() { }
-//USARTClass Serial1(UART4, UART4_IRQn, id_serial1, &rx_buffer2);
-//void serialEvent1() __attribute__((weak));
-//void serialEvent1() { }
+USARTClass Serial1(USART2, USART2_IRQn, id_serial1, &rx_buffer2);
+void serialEvent1() __attribute__((weak));
+void serialEvent1() { }
 //USARTClass Serial2(USART2, USART2_IRQn, id_serial2, &rx_buffer3);
 //void serialEvent2() __attribute__((weak));
 //void serialEvent2() { }
@@ -209,7 +209,7 @@ void UART4_IRQHandler(void)
 
 void USART2_IRQHandler(void) 
 {
-  Serial2.IrqHandler();
+  Serial1.IrqHandler();
 }
 
 //Serial.begin() mapped to USART3(PC10,PC11)
@@ -223,7 +223,7 @@ void USART3_IRQHandler(void)
 void serialEventRun(void)
 {
   if (Serial.available()) serialEvent();
-  //if (Serial1.available()) serialEvent1();
+  if (Serial1.available()) serialEvent1();
   //if (Serial2.available()) serialEvent2();
   //if (Serial3.available()) serialEvent3();
 }
