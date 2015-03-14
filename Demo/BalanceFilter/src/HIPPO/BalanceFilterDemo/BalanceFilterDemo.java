@@ -56,7 +56,7 @@ public class BalanceFilterDemo extends Activity {
 	private String TAG = "HIPPO";
 
 	private long Current_Time=0, Early_Time=0, Use_Time=0;
-	private float Q_angle=0.01f, Q_gyro=0.008f, R_angle=0.5f, dt=0.009f;
+	private float Q_angle=0.005f, Q_gyro=0.003f, R_angle=0.5f, dt=0.02f;
 	private float x, y, z;
 	private float q_bias=0, angle_err, PCt_0, PCt_1, E, K_0, K_1, t_0, t_1;
 	private float P[][] = { { 1, 0 }, { 0, 1 } };
@@ -236,20 +236,27 @@ public class BalanceFilterDemo extends Activity {
         				z = event.values[SensorManager.DATA_Z];        				        				
         				 float g = (float)Math.sqrt(z * z + y*y );//手机横放，机器人围绕X轴旋转
         				 float sin = y / g;//手机横放，机器人围绕X轴旋转        				
-        				 Angle_Accelerometer = (float) Math.asin(sin) * 57.3f;// 手机横放，机器人围绕X轴旋转        				        		        			                          
+        				 Angle_Accelerometer = (float) Math.asin(sin) * 57.3f;// 手机横放，机器人围绕X轴旋转
+                     	Current_Time=event.timestamp;
+                     	//Current_Time= System.currentTimeMillis();
+         				Measure_Gyroscope= 57.3f*(event.values[SensorManager.DATA_X]) + 1.5f;//竖放
+                      	if(Early_Time==0)
+                     		Use_Time=20300000;
+                     	else
+                     	Use_Time=(Current_Time-Early_Time);
+         				Early_Time=Current_Time;
+         				dt = (float)Use_Time *(1.0f / 1000000000.0f);
+         				Log.e("duzhipeng","dt = " + dt);
+        				 
                     }
         			if (event.sensor.getType() == Sensor.TYPE_GYROSCOPE) {   
                     	Current_Time=event.timestamp;
                     	//Current_Time= System.currentTimeMillis();
-                    	if(Early_Time==0)
-                    		Use_Time=20300000;
-                    	else
-                    	Use_Time=(Current_Time-Early_Time);
-        				Early_Time=Current_Time;
-        				dt = (float)Use_Time *(1.0f / 1000000000.0f);
-        				Measure_Gyroscope= 57.3f*(event.values[SensorManager.DATA_X]);//竖放
+        				Measure_Gyroscope= 57.3f*(event.values[SensorManager.DATA_X]) + 1.5f;//竖放
         				
-        				Angle_h = Angle_h + (((Angle_Accelerometer-Angle_h)*0.5f + Measure_Gyroscope)*0.009f);
+        				//Log.e("duzhipeng","DATA_X = " + Gyroscope);
+        				
+        				//Angle_h = Angle_h + (((Angle_Accelerometer-Angle_h)*0.5f + Measure_Gyroscope)*0.009f);
         				
         				
         				//dt=0.009f;
@@ -264,7 +271,7 @@ public class BalanceFilterDemo extends Activity {
                         paint.setColor(mColors[0]);
                         canvas.drawLine(mLastX, mLastValues[0], newX, v, paint);
                         mLastValues[0] = v; 
-                        final float v1 = mYOffset + (Angle_h) * mScale[0];
+                        final float v1 = mYOffset + (Angle) * mScale[0];
                         paint.setColor(mColors[2]);
                         canvas.drawLine(mLastX, mLastValues[1], newX, v1, paint);
                         mLastValues[1] = v1; 
@@ -304,10 +311,10 @@ public class BalanceFilterDemo extends Activity {
         super.onResume();
         mSensorManager.registerListener(mGraphView,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-                SensorManager.SENSOR_DELAY_GAME);
+                20000);
         mSensorManager.registerListener(mGraphView,
                 mSensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),
-                6000);
+                10000);
         mSensorManager.registerListener(mGraphView, 
                 mSensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),
                 SensorManager.SENSOR_DELAY_FASTEST);

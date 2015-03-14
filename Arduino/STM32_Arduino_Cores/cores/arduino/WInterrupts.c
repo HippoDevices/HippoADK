@@ -21,7 +21,24 @@
 //Interrupts
  const uint8_t GPIO_IRQn[] = {
   EXTI0_IRQn,     //0
-  EXTI1_IRQn,     //1
+  EXTI1_IRQn,    //
+  EXTI2_IRQn,     //2
+  EXTI3_IRQn,     //3
+  EXTI4_IRQn,     //4
+  EXTI9_5_IRQn,   //5
+  EXTI9_5_IRQn,   //6
+  EXTI9_5_IRQn,   //7
+  EXTI9_5_IRQn,   //8
+  EXTI9_5_IRQn,   //9
+  EXTI15_10_IRQn, //10
+  EXTI9_5_IRQn, //11
+  EXTI9_5_IRQn, //12
+  EXTI15_10_IRQn, //13
+  EXTI15_10_IRQn, //14
+  EXTI15_10_IRQn  //15
+
+    EXTI0_IRQn,     //0
+  EXTI1_IRQn,    //
   EXTI2_IRQn,     //2
   EXTI3_IRQn,     //3
   EXTI4_IRQn,     //4
@@ -36,6 +53,19 @@
   EXTI15_10_IRQn, //13
   EXTI15_10_IRQn, //14
   EXTI15_10_IRQn  //15
+
+    EXTI0_IRQn,     //0
+  EXTI1_IRQn,    //
+  EXTI2_IRQn,     //2
+  EXTI3_IRQn,     //3
+  EXTI4_IRQn,     //4
+  EXTI1_IRQn,   //38
+  EXTI0_IRQn,   //39
+  
+  EXTI9_5_IRQn,   //7
+  EXTI9_5_IRQn,   //8
+  EXTI9_5_IRQn,   //9
+  
  };
 
 typedef void (*interruptCB)(void);

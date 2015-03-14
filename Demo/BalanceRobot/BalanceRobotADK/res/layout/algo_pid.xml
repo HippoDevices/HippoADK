@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:id="@+id/textView_KAngle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="KAngle:" />
+
+    <SeekBar
+        android:id="@+id/seekBar_KAngle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:indeterminate="false"
+        android:max="1000"
+        android:progress="500" />
+
+    <TextView
+        android:id="@+id/textView_KAngleSpeed"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="KAngleSpeed:" />
+
+    <SeekBar
+        android:id="@+id/seekBar_KAngleSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:max="0"
+        android:progress="0"
+        android:secondaryProgress="0" />
+
+    <TextView
+        android:id="@+id/textView_KPosition"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KPosition:" />
+
+    <SeekBar
+        android:id="@+id/seekBar_KPosition"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:max="0"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:progress="0"
+        android:secondaryProgress="0" />
+
+    <TextView
+        android:id="@+id/textView_KPositionSpeed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KPositionSpeed:" />
+
+    <SeekBar
+        android:id="@+id/seekBar_KPositionSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:max="0"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:progress="0"
+        android:secondaryProgress="0" />
+
+    <TextView
+        android:id="@+id/textView_KBaseAngle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="KBaseAngle:" />
+
+    <SeekBar
+        android:id="@+id/seekBar_KBaseAngle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:max="0"
+        android:paddingLeft="20dp"
+        android:paddingRight="15dp"
+        android:progress="0"
+        android:secondaryProgress="0" />
+
+</LinearLayout>
