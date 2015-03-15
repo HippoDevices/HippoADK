@@ -1,4 +1,3 @@
-#include <Firmata.h>
 //#include "stm32f4xx.h"
 #include "arduino.h"
 //#include "stm32f4_discovery.h"
@@ -31,34 +30,21 @@ int timerCounter  = 0;
 USB_OTG_CORE_HANDLE           USB_OTG_Core_dev;
 USBH_HOST                     USB_Host;
 
-  uint8_t msg[13];
-  uint8_t commandPacket_sent[4]={0};
-uint8_t msg5[5]={0xD0,0x00,0x00,0x00,0x00};
-uint8_t msg8[5]={0xF1,0x00,0x00,0x00,0xFF};
-uint8_t init1 = 0;
+uint8_t msg[13];
+uint8_t commandPacket_sent[4]={0};
 
 static boolean output = HIGH;
 
 void setup()
 {
-  uint8_t msg1[5]={0xD1,0x07,0x01,0x00,0x00};  // digitalRead   A B C D
-  uint8_t msg3[5]={0}; 
-  uint8_t msg4[5]={0xED,0x7B,0x00,0x00,0x00};
-  uint8_t msg5[5]={0xC2,0x01,0x00,0x00,0x00};  // analogRead   G  C2
-  
-  uint8_t msg6[5] = {0xC3,0x01,0x00,0x00,0x00};  // analogRead   H  C3
-  uint16_t analogvalue = 0;
-  uint8_t initTEST = 0;
-  
-  uint8_t flag=0;
- RCC_ClocksTypeDef RCC_Clocks;
+  RCC_ClocksTypeDef RCC_Clocks;
   pinMode(RED,OUTPUT);
   pinMode(GREEN,OUTPUT);
   attachInterrupt(pinAMotorRight, encoderCounterMotorRight, CHANGE);  //
   attachInterrupt(pinAMotorLeft, encoderCounterMotorLeft, CHANGE);  //
   
   Serial.begin(9600);
-  TIM5_Timing(300,3600);
+  TIM5_Timing(300,3600);//30ms
   
   /* SysTick end of count event each 1ms */
   RCC_GetClocksFreq(&RCC_Clocks);
@@ -71,7 +57,7 @@ void setup()
             &USR_Callbacks);
             
   /* Init ADK Library */
-   USBH_ADK_Init("Microchip Technology Inc.", "Basic Accessory Demo", "NWtel", "2.0", "http://www.microchip.com/android",  "N/A");
+   USBH_ADK_Init("HippoDevices Inc.", "BalanceRobot", "Hippo", "2.0", "http://www.hippodevices.com",  "N/A");
    
   while (1)
   {
@@ -114,11 +100,8 @@ void setup()
 }
 
 void loop() {
+  
 }
-
-/*
-解码 手机通过USB发送给STM32F4的电机控制指令
-*/
 
 void Decoding(uint8_t *data)
 {
@@ -154,30 +137,23 @@ void Decoding(uint8_t *data)
    } 
 }
 
-//中断0调用函数
 void encoderCounterMotorLeft()
 {
-  //if ((millis() - time) > 3) //防抖动处理
-  //      count ++; 
- // time = millis();
   int pinAMotorLeftState = digitalRead(pinAMotorLeft);
   int pinBMotorLeftState = digitalRead(pinBMotorLeft);
-  if(((pinAMotorLeftState == 0)&&(pinBMotorLeftState != 0))|((pinAMotorLeftState != 0)&&(pinBMotorLeftState == 0)))  // PA0下降沿且PA1=1 或 PA0上升沿且PA1=0  
+  if(((pinAMotorLeftState == 0)&&(pinBMotorLeftState != 0))|((pinAMotorLeftState != 0)&&(pinBMotorLeftState == 0)))
   {
     encoderMotorLeft++;	
   }else{
     encoderMotorLeft--;
   } 
-  //digitalWrite(RED, output);
-  //output = !output;
 }
 
-//中断0调用函数
 void encoderCounterMotorRight()
 {
   int pinAMotorRightState = digitalRead(pinAMotorRight);
   int pinBMotorRightState = digitalRead(pinBMotorRight);
-  if(((pinAMotorRightState == 0)&&(pinBMotorRightState != 0))|((pinAMotorRightState != 0)&&(pinBMotorRightState == 0)))  // PA0下降沿且PA1=1 或 PA0上升沿且PA1=0  
+  if(((pinAMotorRightState == 0)&&(pinBMotorRightState != 0))|((pinAMotorRightState != 0)&&(pinBMotorRightState == 0)))
   {
     encoderMotorRight++;	
   }else{
@@ -187,43 +163,38 @@ void encoderCounterMotorRight()
 
 void TIM5_IRQHandler(void)		 
 { 
-	if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)  
-	{
-		TIM_ClearITPendingBit(TIM5, TIM_IT_Update  );
-		if(encoderMotorLeft < 0)   
-		      commandPacket_sent[0] =1 ;  	  // 符号位	   负
-		else  commandPacket_sent[0] =0 ;
-	    commandPacket_sent[1]=(uint8_t)(abs(encoderMotorLeft));	 //数据位
-		 
-		if(encoderMotorRight < 0)   
-		      commandPacket_sent[2] =1 ;  	  // 符号位	   负
-		else  commandPacket_sent[2] =0 ;
-	    commandPacket_sent[3]=(uint8_t)(abs(encoderMotorRight));	 //数据位
-
-                //USBH_ADK_write(&USB_OTG_Core_dev, msg8, sizeof(msg8));
-		USBH_ADK_write(&USB_OTG_Core_dev, commandPacket_sent, sizeof(commandPacket_sent));
-
-    	encoderMotorLeft  = 0;  // 清零 
-		encoderMotorRight = 0;  // 清零 
-
+  if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)  
+  {
+    TIM_ClearITPendingBit(TIM5, TIM_IT_Update  );
+    if(encoderMotorLeft < 0){  
+      commandPacket_sent[0] =1 ;  	  
+    }else{
+      commandPacket_sent[0] =0 ;
+    }
+    commandPacket_sent[1]=(uint8_t)(abs(encoderMotorLeft));	 
+    if(encoderMotorRight < 0){  
+      commandPacket_sent[2] =1 ;
+    }else{
+      commandPacket_sent[2] =0 ;
+    }
+    commandPacket_sent[3]=(uint8_t)(abs(encoderMotorRight));	 
+    USBH_ADK_write(&USB_OTG_Core_dev, commandPacket_sent, sizeof(commandPacket_sent));
+    encoderMotorLeft  = 0;
+    encoderMotorRight = 0;  
 /*
-          timerCounter++;
-          if(timerCounter == 100){
-            digitalWrite(GREEN, output);
-            output = !output;
-            timerCounter = 0;
-            Serial.println("encoderMotorLeft:");
-            Serial.print(encoderMotorLeft);
-            Serial.println("\n\r");
-            Serial.println("encoderMotorRight:");
-            Serial.print(encoderMotorRight);
-            Serial.println("\n\r");
-            
-          }
-          */
-
-        }
-
-
+    timerCounter++;
+    if(timerCounter == 100){
+      digitalWrite(GREEN, output);
+      output = !output;
+      timerCounter = 0;
+      Serial.println("encoderMotorLeft:");
+      Serial.print(encoderMotorLeft);
+      Serial.println("\n\r");
+      Serial.println("encoderMotorRight:");
+      Serial.print(encoderMotorRight);
+      Serial.println("\n\r");
+      }
+*/
+  }
 } 
 
