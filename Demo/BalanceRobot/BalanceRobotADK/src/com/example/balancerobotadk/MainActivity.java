@@ -61,13 +61,21 @@ public class MainActivity extends Activity {
 	public static int KBaseAngle = 23;
 	*/
 	
+	/*
 	//V0.2
 	public static int KAngle = 67;
 	public static int KAngleSpeed = 64;
 	public static int KPosition = 50;
 	public static int KPositionSpeed = 78;
 	public static int KBaseAngle = 11;
+	*/
 	
+	//Reduce PID Value
+	public static int KAngle = 3;
+	public static int KAngleSpeed = 0;
+	public static int KPosition = 0;
+	public static int KPositionSpeed = 0;
+	public static int KBaseAngle = 0;
 	
 	@SuppressLint("HandlerLeak")
 	private Handler handler = new Handler() {
