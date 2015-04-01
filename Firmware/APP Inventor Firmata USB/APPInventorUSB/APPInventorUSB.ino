@@ -418,7 +418,7 @@ void setup()
   digitalWrite(LED,HIGH);
 
   /* Init ADK Library */
-   USBH_ADK_Init("Microchip Technology Inc.", "Basic Accessory Demo", "NWtel", "2.0", "http://www.microchip.com/android",  "N/A");
+   USBH_ADK_Init("HippoDevices Inc.", "BalanceRobot", "Hippo", "2.0", "http://www.hippodevices.com",  "N/A");
    Firmata.USBProcessinput(msg1);  //digitalRead with one command
    //Firmata.USBProcessinput(msg5);  //digitalRead with one command
    //Firmata.USBProcessinput(msg4); //analogRead  with one command
