@@ -1,9 +1,16 @@
-HippoADK-Pinout is compatible with MakerLab-STM32 board, so you will find most of pin's equivalences, althought not all of them are available at HippoADK.
+HippoADK-Pinout is similar to MakerLab-STM32 board only in some pins, correspond basically to the pinout of a ARM7 STM32F405 mcu. 
 
-This file and pinout diagram can be found at:
+MakerLab-STM32 pinout:
+https://github.com/agnunez/HippoADK/tree/master/Hardware/MakerLab-STM32-Pinout.jpg
 
-https://github.com/agnunez/HippoADK/tree/master/Hardware/MakerLab-STM32-Pinout-compatible.jpg
+STM32F405 datasheet including pinout:
+https://github.com/agnunez/HippoADK/tree/master/Hardware/STM32F405.jpg
 
-Have Fun
-Agustin
+My drawing (on going, please use at your risk) of Hippo-ADK pinout can be found here:
+http://tinyurl.com/pu4j4uu
+
+Please, send in github any suggestion, error found or new discovery.
+ 
+Have Fun!
+Agustin Nunez
 
